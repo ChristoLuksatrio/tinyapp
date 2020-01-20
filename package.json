@@ -18,6 +18,10 @@
   },
   "homepage": "https://github.com/ChristoLuksatrio/tinyapp#readme",
   "dependencies": {
+    "ejs": "^3.0.1",
     "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.2"
   }
 }
