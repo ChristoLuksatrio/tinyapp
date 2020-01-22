@@ -4,22 +4,32 @@
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup" style='justify-content: space-between;'>
       <div class="navbar-nav">
         <a class="nav-item nav-link" href="/urls">My URLs</a>
         <a class="nav-item nav-link" href="/urls/new">Create New URL</a>
-        <% if (!username) { %>
-          <form method='POST' action='/login' style='display: flex'>
-            <input class="form-control" type="text" name="username" placeholder="Username" style='margin: 0 8px 0 8px'>
-            <button type="submit" class="btn btn-outline-dark">Login</button>
-          </form>
-        <% } else { %>
-          <li class='nav-item my-2 mx-2'>Logged in as: <%= username %>!</li>
+      </div>
+      <% if (!user) { %>
+        <div style='float: right;'>
+          <div>
+            <form method='GET' action='/login' class='d-flex'>
+              <button type="submit" class="btn btn-outline-dark">Login</button>
+            </form>
+          </div>
+          <div>
+            <form method='GET' action='/register' class='d-flex'>
+              <button type="submit" class="btn btn-outline-dark">Register</button>
+            </form>
+          </div>
+        </div>
+      <% } else { %>
+        <div style='float: right;'>
+          <p class='nav-item my-2 mx-2'>Logged in as: <%= user.email %></p>
           <form method='POST' action='/logout' style='display: flex'>
             <button type="submit" class="btn btn-outline-dark mx-2">Logout</button>
           </form>
-        <% } %>
-      </div>
+        </div>
+      <% } %>
     </div>
   </nav>
 </header>
