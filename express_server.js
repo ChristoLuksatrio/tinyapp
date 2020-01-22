@@ -109,7 +109,12 @@ app.get('/urls/new', (req, res) => {
   let templateVars = {
     user: users[req.cookies['user_id']]
   };
-  res.render('urls_new');
+  const userExists = users[req.cookies['user_id']]
+  if (userExists) {
+    res.render('urls_new', templateVars);
+  } else {
+    res.redirect('/urls');
+  }
 })
 
 app.get('/login', (req, res) => {
