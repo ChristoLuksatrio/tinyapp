@@ -18,3 +18,16 @@ const users = {
   }
 }
 
+// Finds userID by email
+const getUserByEmail = (email, database) => {
+  let user = {};
+  for (const id in database) {
+    // console.log(id);
+    if (database[id].email === email) {
+      user = database[id];
+    }
+  }
+  return user;
+}
+
+console.log(getUserByEmail('test@test.com', users));

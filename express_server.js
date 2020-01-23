@@ -42,6 +42,8 @@ const users = {
   }
 }
 
+
+
 function generateRandomString() {
   var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
 	var result = '';
@@ -98,6 +100,17 @@ const urlsForUser = id => {
   return newDatabase;
 }
 
+// Finds userID by email
+const getUserByEmail = (email, database) => {
+  let user = {};
+  for (const id in database) {
+    if (database[id].email === email) {
+      user = database[id];
+    }
+  }
+  return user;
+}
+
 
 
 
@@ -113,7 +126,6 @@ app.get('/', (req,res) => {
 
 
 app.get('/urls', (req, res) => {
-  console.log(users[req.session.user_id]);
   const newDatabase = urlsForUser(req.session.user_id);
   let templateVars = {
     urls: newDatabase,
@@ -126,11 +138,14 @@ app.get('/urls', (req, res) => {
 app.post("/urls", (req, res) => {
   let URL = req.body.longURL;
   let str = generateRandomString();
+  if (!URL.startsWith('https://') || !URL.startsWith('http://')) {
+    URL = 'http://' + URL;
+    res.redirect(`/urls/${str}`);
+  }
   urlDatabase[str] = {
     longURL: URL,
     userID: req.session.user_id
   };
-  res.redirect(`/urls/${str}`);
 });
 
 // Deletes a link
@@ -210,7 +225,7 @@ app.post('/register', (req, res) => {
 
 // Edit page within each URL that enables you to change the longURL
 app.get('/urls/:shortURL', (req, res) => {
-  if (req.cookies['user_id']) {
+  if (req.session.user_id) {
     let templateVars = { 
       shortURL: req.params.shortURL, 
       longURL: urlDatabase[req.params.shortURL].longURL,
@@ -231,6 +246,10 @@ app.post('/urls/:shortURL', (req, res) => {
 
 app.get('/u/:shortURL', (req, res) => {
   const longURL = urlDatabase[req.params.shortURL].longURL;
+  // console.log(urlDatabase[req.params.shortURL].longURL);
+  // let templateVars = {
+  //   longURL : urlDatabase[req.params.shortURL].longURL
+  // }
   res.redirect(longURL);
 })
 
