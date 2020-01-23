@@ -1,10 +1,11 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt');
+const cookieParser = require('cookie-parser');
+const cookieSession = require('cookie-session');
+// const { getUserByEmail } = require('helpers');
 const app = express();
 const PORT = 8080;
-var cookieParser = require('cookie-parser')
-var cookieSession = require('cookie-session')
 
 
 app.use(cookieSession({
@@ -24,27 +25,27 @@ const urlDatabase = {
   i3BoGr: { longURL: "https://www.google.ca", userID: "sdsdsd" }
 };
 
-const users = { 
+const users = {
   "userRandomID": {
-    id: "userRandomID", 
-    email: "user@example.com", 
+    id: "userRandomID",
+    email: "user@example.com",
     password: "purple-monkey-dinosaur"
   },
- "user2RandomID": {
-    id: "user2RandomID", 
-    email: "user2@example.com", 
+  "user2RandomID": {
+    id: "user2RandomID",
+    email: "user2@example.com",
     password: "dishwasher-funk"
   },
   'sdsdsd': {
-    id: "sdsdsd", 
-    email: "test@test.com", 
+    id: "sdsdsd",
+    email: "test@test.com",
     password: "test"
   }
-}
+};
 
 
 
-function generateRandomString() {
+const generateRandomString = () => {
   var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
 	var result = '';
 	for (let i = 0; i < 6; i++) {
@@ -100,16 +101,7 @@ const urlsForUser = id => {
   return newDatabase;
 }
 
-// Finds userID by email
-const getUserByEmail = (email, database) => {
-  let user = {};
-  for (const id in database) {
-    if (database[id].email === email) {
-      user = database[id];
-    }
-  }
-  return user;
-}
+
 
 
 
