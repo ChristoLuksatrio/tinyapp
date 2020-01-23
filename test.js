@@ -1,17 +1,46 @@
-const urlDatabase = {
-  b6UTxQ: { longURL: "https://www.tsn.ca", userID: "sdsdsd" },
-  i3BoGr: { longURL: "https://www.google.ca", userID: "sdsdsd" },
-  sdsdsd: { longURL: "https://www.netflix.ca", userID: "aaaa" }
-};
+const bcrypt = require('bcrypt');
 
-const urlsForUser = id => {
-  const newDatabase = {}
-  for (const short of Object.keys(urlDatabase)) {
-    if (id === urlDatabase[short].userID) {
-      newDatabase[short] = urlDatabase[short].longURL
-    }
+const users = { 
+  "userRandomID": {
+    id: "userRandomID", 
+    email: "user@example.com", 
+    password: "purple-monkey-dinosaur"
+  },
+ "user2RandomID": {
+    id: "user2RandomID", 
+    email: "user2@example.com", 
+    password: "dishwasher-funk"
+  },
+  'sdsdsd': {
+    id: "sdsdsd", 
+    email: "test@test.com", 
+    password: "$2b$10$Xj9dsxCXh.tFTieVu/4uCO8weA/IImh2aHXI2DT3GGGe8A2VJAeIe"
   }
-  return newDatabase;
 }
 
-console.log(urlsForUser("sdsdsd"))
+//bcrypt.compareSync(passwordData, users[user].password)
+
+const validUser = (passwordData) => {
+  let value = false;
+  for (const user of Object.keys(users)) {
+    console.log(bcrypt.compareSync(passwordData, users[user].password))
+    // if (users[user].email === emailData && users[user].password === passwordData) {
+    // if (bcrypt.compareSync(passwordData, users[user].password)) {
+
+    //   value = true;
+    // } 
+  }
+  return value;
+}
+
+validUser('2');
+
+// const validUser = (emailData, passwordData) => {
+//   let value = false;
+//   for (const user of Object.keys(users)) {
+//     if (users[user].email === emailData && users[user].password === passwordData) {
+//       value = true;
+//     } 
+//   }
+//   return value;
+// }

@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const bcrypt = require('bcrypt');
 const app = express();
 const PORT = 8080;
 var cookieParser = require('cookie-parser')
@@ -54,11 +55,13 @@ const existingEmail = (data) => {
   return value;
 }
 
+
 // Returns true if email and password exists in database and matches
 const validUser = (emailData, passwordData) => {
   let value = false;
   for (const user of Object.keys(users)) {
-    if (users[user].email === emailData && users[user].password === passwordData) {
+    let checkPass = bcrypt.compareSync(passwordData, users[user].password);
+    if (users[user].email === emailData && checkPass) {
       value = true;
     } 
   }
@@ -147,6 +150,8 @@ app.get('/login', (req, res) => {
   res.render('urls_login', templateVars);
 })
 
+
+// When user logs in, check database if email/pass matches, if true, log in
 app.post('/login', (req, res) => {
   if (validUser(req.body.email, req.body.password)) {
     let id = findID(req.body.email);
@@ -170,6 +175,8 @@ app.get('/register', (req, res) => {
   res.render('urls_register', templateVars);
 })
 
+
+// Creates a new account
 app.post('/register', (req, res) => {
   if (!req.body.email || !req.body.password) {
     res.statusCode = 400;
@@ -179,11 +186,14 @@ app.post('/register', (req, res) => {
     res.redirect('/register');
   } else {
     const mainID = generateRandomString();
+    const hashedPassword = bcrypt.hashSync(req.body.password, 10)
     users[mainID] = {
       id: mainID,
       email: req.body.email,
-      password: req.body.password
+      password: hashedPassword
+      // password: req.body.password
     }
+    console.log(users);
     res.cookie('user_id', mainID);
     res.redirect('/urls');
   }
