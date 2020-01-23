@@ -175,11 +175,10 @@ app.post('/login', (req, res) => {
   if (validUser(req.body.email, req.body.password)) {
     let id = findID(req.body.email);
     req.session.user_id = id;
-    // res.cookie('user_id', id);
     res.redirect('urls');
   } else {
     res.statusCode = 403;
-    res.redirect('/login');
+    res.send('<html><body><p>ERROR 403: Email/Password does not match our database</p></body></html>');
   }
 });
 
@@ -205,7 +204,7 @@ app.post('/register', (req, res) => {
     res.redirect('/register');
   } else if (existingEmail(req.body.email)) {
     res.statusCode = 400;
-    res.redirect('/register');
+    res.send('<html><body><p>ERROR 40-: Email already exists in our database</p></body></html>');
   } else {
     const mainID = generateRandomString();
     const hashedPassword = bcrypt.hashSync(req.body.password, 10);
@@ -215,19 +214,17 @@ app.post('/register', (req, res) => {
       password: hashedPassword
     };
     req.session.user_id = mainID;
-    // res.cookie('user_id', mainID);
     res.redirect('/urls');
   }
 });
 
 // Edit page within each URL that enables you to change the longURL
 app.get('/urls/:shortURL', (req, res) => {
-  if (req.session.user_id) {
+  if (req.session.user_id === urlDatabase[req.params.shortURL].userID) {
     let templateVars = {
       shortURL: req.params.shortURL,
       longURL: urlDatabase[req.params.shortURL].longURL,
-      user: req.session.user_id
-      // user: users[req.cookies['user_id']]
+      user: users[req.session.user_id]
     };
     res.render('urls_show', templateVars);
   } else {
@@ -247,12 +244,8 @@ app.post('/urls/:shortURL', (req, res) => {
 
 
 app.get('/u/:shortURL', (req, res) => {
-  if (req.session.user_id === urlDatabase[req.params.shortURL].userID) {
-    const longURL = urlDatabase[req.params.shortURL].longURL;
-    res.redirect(longURL);
-  } else {
-    res.redirect('/urls');
-  }
+  const longURL = urlDatabase[req.params.shortURL].longURL;
+  res.redirect(longURL);
 });
 
 
