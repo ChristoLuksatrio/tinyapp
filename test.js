@@ -18,29 +18,3 @@ const users = {
   }
 }
 
-//bcrypt.compareSync(passwordData, users[user].password)
-
-const validUser = (passwordData) => {
-  let value = false;
-  for (const user of Object.keys(users)) {
-    console.log(bcrypt.compareSync(passwordData, users[user].password))
-    // if (users[user].email === emailData && users[user].password === passwordData) {
-    // if (bcrypt.compareSync(passwordData, users[user].password)) {
-
-    //   value = true;
-    // } 
-  }
-  return value;
-}
-
-validUser('2');
-
-// const validUser = (emailData, passwordData) => {
-//   let value = false;
-//   for (const user of Object.keys(users)) {
-//     if (users[user].email === emailData && users[user].password === passwordData) {
-//       value = true;
-//     } 
-//   }
-//   return value;
-// }
